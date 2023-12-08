@@ -3,13 +3,13 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from database.MongoClientSingleton import MongoClientSingleton
-from settings import MONGO_DB_NAME
+from settings import MONGO_DB
 
 
 class BaseDAO:
     def __init__(self, client: MongoClientSingleton, collection_name: str, schema):
         self.client = client
-        self.db = self.client.get_database(MONGO_DB_NAME)
+        self.db = self.client.get_database(MONGO_DB['DB_NAME'])
         self.collection = self.db.get_collection(collection_name)
         self.schema = schema
 

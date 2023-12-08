@@ -3,13 +3,13 @@ import pytest
 from database.MongoClientSingleton import MongoClientSingleton
 from database.dao.BaseDAO import BaseDAO
 from schemas.portfolio import Portfolio
-from settings import MONGO_DB_HOST, MONGO_DB_PORT, TEST_MONGO_DB_COLLECTION
+from settings import MONGO_DB
 
 
 @pytest.mark.asyncio
 async def test_portfolio_inserting(test_inserting_portfolio):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = BaseDAO(client, TEST_MONGO_DB_COLLECTION, Portfolio)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = BaseDAO(client, MONGO_DB['TEST_COLLECTION'], Portfolio)
 
     await dao._add(test_inserting_portfolio)
     getting_portfolio = await dao._get(name=test_inserting_portfolio.name)
@@ -19,8 +19,8 @@ async def test_portfolio_inserting(test_inserting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_deleting(test_deleting_portfolio):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = BaseDAO(client, TEST_MONGO_DB_COLLECTION, Portfolio)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = BaseDAO(client, MONGO_DB['TEST_COLLECTION'], Portfolio)
 
     await dao._add(test_deleting_portfolio)
     await dao._delete(name=test_deleting_portfolio.name, user_id=test_deleting_portfolio.user_id)
@@ -31,8 +31,8 @@ async def test_portfolio_deleting(test_deleting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_updating(test_updating_portfolio):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = BaseDAO(client, TEST_MONGO_DB_COLLECTION, Portfolio)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = BaseDAO(client, MONGO_DB['TEST_COLLECTION'], Portfolio)
 
     await dao._add(test_updating_portfolio)
     updated_portfolio = await dao._update(
@@ -46,8 +46,8 @@ async def test_portfolio_updating(test_updating_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_list(test_portfolio_list):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = BaseDAO(client, TEST_MONGO_DB_COLLECTION, Portfolio)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = BaseDAO(client, MONGO_DB['TEST_COLLECTION'], Portfolio)
 
     await dao._delete_many()
 

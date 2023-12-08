@@ -2,14 +2,13 @@ import pytest
 
 from database.MongoClientSingleton import MongoClientSingleton
 from database.dao.PortfolioDAO import PortfolioDAO
-from schemas.portfolio import Portfolio
-from settings import MONGO_DB_HOST, MONGO_DB_PORT, TEST_MONGO_DB_COLLECTION
+from settings import MONGO_DB
 
 
 @pytest.mark.asyncio
 async def test_portfolio_dao_inserting(test_inserting_portfolio):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = PortfolioDAO(client, TEST_MONGO_DB_COLLECTION)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = PortfolioDAO(client, MONGO_DB['TEST_COLLECTION'])
 
     await dao.add(test_inserting_portfolio)
     getting_portfolio = await dao.get(
@@ -22,8 +21,8 @@ async def test_portfolio_dao_inserting(test_inserting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_deleting(test_deleting_portfolio):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = PortfolioDAO(client, TEST_MONGO_DB_COLLECTION)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = PortfolioDAO(client, MONGO_DB['TEST_COLLECTION'])
 
     await dao.add(test_deleting_portfolio)
     await dao.delete(test_deleting_portfolio.name, test_deleting_portfolio.user_id)
@@ -34,8 +33,8 @@ async def test_portfolio_deleting(test_deleting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_updating(test_updating_portfolio):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = PortfolioDAO(client, TEST_MONGO_DB_COLLECTION)
+    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+    dao = PortfolioDAO(client, MONGO_DB['TEST_COLLECTION'])
 
     await dao.add(test_updating_portfolio)
     updated_portfolio = await dao.update(
