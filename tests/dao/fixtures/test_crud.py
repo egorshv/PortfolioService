@@ -56,6 +56,14 @@ def test_portfolio():
 
 
 @pytest.fixture
+def test_portfolio_with_same_name():
+    return Portfolio(
+        name='portfolio 1',
+        user_id=4
+    )
+
+
+@pytest.fixture
 def test_portfolio1():
     return Portfolio(
         name='portfolio 2',

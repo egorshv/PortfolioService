@@ -78,3 +78,15 @@ async def test_add_state(test_portfolio1, test_state, test_state1):
 
     portfolio = await dao.get(test_portfolio1.name, test_portfolio1.user_id)
     assert len(portfolio.states) == 2
+
+
+@pytest.mark.asyncio
+async def test_adding_portfolio_with_same_name(test_portfolio, test_portfolio_with_same_name):
+    dao = PortfolioDAO(MONGO_DB['TEST_COLLECTION'])
+    await dao.delete_many()
+
+    await dao.add(test_portfolio)
+    await dao.add(test_portfolio_with_same_name)
+
+    portfolios = await dao.list()
+    assert len(portfolios) == 1
