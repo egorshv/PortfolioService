@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -8,10 +8,9 @@ from schemas.trade import Trade
 
 
 class Portfolio(BaseModel):
-    id: uuid.UUID
     name: str
-    precision: float
-    recall: float
+    precision: Optional[float] = None
+    recall: Optional[float] = None
     user_id: int
-    trades: List[Trade]
-    states: List[State]
+    trades: List[Trade] = []
+    states: List[State] = []
