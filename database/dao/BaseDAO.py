@@ -9,7 +9,7 @@ from settings import MONGO_DB
 class BaseDAO:
     def __init__(self, client: MongoClientSingleton, collection_name: str, schema):
         self.client = client
-        self.db = self.client.get_database(MONGO_DB['DB_NAME'])
+        self.db = self.client.get_database(MONGO_DB['NAME'])
         self.collection = self.db.get_collection(collection_name)
         self.schema = schema
 
