@@ -1,6 +1,10 @@
+from datetime import datetime
+
 import pytest
 
 from schemas.portfolio import Portfolio
+from schemas.state import State
+from schemas.trade import Trade, TradeActionType, TradeCurrency
 
 
 @pytest.fixture
@@ -41,3 +45,59 @@ def test_portfolio_list(test_portfolio_names):
         )
         for _id, name in enumerate(test_portfolio_names)
     ]
+
+
+@pytest.fixture
+def test_portfolio():
+    return Portfolio(
+        name='portfolio 1',
+        user_id=4
+    )
+
+
+@pytest.fixture
+def test_portfolio1():
+    return Portfolio(
+        name='portfolio 2',
+        user_id=5
+    )
+
+
+@pytest.fixture
+def test_state():
+    return State(
+        USD_result=100.0,
+        RUB_result=100.0,
+        created_at=datetime.now()
+    )
+
+
+@pytest.fixture
+def test_state1():
+    return State(
+        USD_result=110.0,
+        RUB_result=110.0,
+        created_at=datetime.now()
+    )
+
+
+@pytest.fixture
+def test_trade():
+    return Trade(
+        ticker='',
+        action=TradeActionType.BUY,
+        value=100,
+        currency=TradeCurrency.USD,
+        created_at=datetime.now()
+    )
+
+
+@pytest.fixture
+def test_trade1():
+    return Trade(
+        ticker='',
+        action=TradeActionType.SELL,
+        value=200,
+        currency=TradeCurrency.RUB,
+        created_at=datetime.now()
+    )
