@@ -23,21 +23,21 @@ async def get_portfolio(user_id: int, portfolio_name: str):
     return portfolio
 
 
-@portfolio_router.post('/portfolio/post', response_model=Portfolio)
+@portfolio_router.post('/portfolio', response_model=Portfolio)
 async def post_portfolio(portfolio: Portfolio):
     dao = PortfolioDAO(MONGO_DB['COLLECTION'])
     await dao.add(portfolio)
     return portfolio
 
 
-@portfolio_router.delete('/portfolio/delete/{user_id}/{portfolio_name}')
+@portfolio_router.delete('/portfolio/{user_id}/{portfolio_name}')
 async def delete_portfolio(user_id: int, portfolio_name: str):
     dao = PortfolioDAO(MONGO_DB['COLLECTION'])
     await dao.delete(portfolio_name, user_id)
     return {'result': 'portfolio deleted'}
 
 
-@portfolio_router.put('portfolio/put/{user_id}/{portfolio_name}')
+@portfolio_router.put('/portfolio/{user_id}/{portfolio_name}')
 async def update_portfolio(user_id: int, portfolio_name: str, new_portfolio: Portfolio):
     dao = PortfolioDAO(MONGO_DB['COLLECTION'])
     await dao.update(portfolio_name, user_id, **new_portfolio.model_dump())

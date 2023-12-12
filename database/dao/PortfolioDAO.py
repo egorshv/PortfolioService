@@ -40,11 +40,11 @@ class PortfolioDAO(BaseDAO):
     async def get(self, portfolio_name: str, user_id: int) -> Optional[Portfolio]:
         return await self._get(name=portfolio_name, user_id=user_id)
 
-    async def update(self, portfolio_name: str, user_id: int, **kwargs) -> Optional[Portfolio]:
+    async def update(self, portfolio_name: str, portfolio_user_id: int, **kwargs) -> Optional[Portfolio]:
         filtered_params = {key: value for key, value in kwargs.items() if value is not None}
         lock = asyncio.Lock()
         async with lock:
-            return await self._update({'name': portfolio_name, 'user_id': user_id}, **filtered_params)
+            return await self._update({'name': portfolio_name, 'user_id': portfolio_user_id}, **filtered_params)
 
     async def list(self, **kwargs) -> Optional[List[Portfolio]]:
         filtered_params = {key: value for key, value in kwargs.items() if value is not None}
