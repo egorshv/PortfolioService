@@ -1,14 +1,12 @@
 import pytest
 
-from database.MongoClientSingleton import MongoClientSingleton
 from database.dao.PortfolioDAO import PortfolioDAO
 from settings import MONGO_DB
 
 
 @pytest.mark.asyncio
 async def test_portfolio_dao_inserting(test_inserting_portfolio):
-    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
-    dao = PortfolioDAO(client, MONGO_DB['TEST_COLLECTION'])
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
 
     await dao.add(test_inserting_portfolio)
     getting_portfolio = await dao.get(
@@ -21,8 +19,7 @@ async def test_portfolio_dao_inserting(test_inserting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_deleting(test_deleting_portfolio):
-    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
-    dao = PortfolioDAO(client, MONGO_DB['TEST_COLLECTION'])
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
 
     await dao.add(test_deleting_portfolio)
     await dao.delete(test_deleting_portfolio.name, test_deleting_portfolio.user_id)
@@ -33,8 +30,7 @@ async def test_portfolio_deleting(test_deleting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_updating(test_updating_portfolio):
-    client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
-    dao = PortfolioDAO(client, MONGO_DB['TEST_COLLECTION'])
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
 
     await dao.add(test_updating_portfolio)
     updated_portfolio = await dao.update(
@@ -48,8 +44,7 @@ async def test_portfolio_updating(test_updating_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_list(test_portfolio_list):
-    client = MongoClientSingleton(MONGO_DB_HOST, MONGO_DB_PORT)
-    dao = PortfolioDAO(client, TEST_MONGO_DB_COLLECTION)
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
 
     await dao.delete_many()
 
@@ -59,3 +54,39 @@ async def test_portfolio_list(test_portfolio_list):
     portfolio_list = await dao.list()
 
     assert portfolio_list == test_portfolio_list
+
+
+@pytest.mark.asyncio
+async def test_add_trade(test_portfolio, test_trade, test_trade1):
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
+    await dao.delete_many()
+    await dao.add(test_portfolio)
+    await dao.add_trade(test_trade, test_portfolio.name, test_portfolio.user_id)
+    await dao.add_trade(test_trade1, test_portfolio.name, test_portfolio.user_id)
+
+    portfolio = await dao.get(test_portfolio.name, test_portfolio.user_id)
+    assert len(portfolio.trades) == 2
+
+
+@pytest.mark.asyncio
+async def test_add_state(test_portfolio1, test_state, test_state1):
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
+    await dao.delete_many()
+    await dao.add(test_portfolio1)
+    await dao.add_state(test_state, test_portfolio1.name, test_portfolio1.user_id)
+    await dao.add_state(test_state1, test_portfolio1.name, test_portfolio1.user_id)
+
+    portfolio = await dao.get(test_portfolio1.name, test_portfolio1.user_id)
+    assert len(portfolio.states) == 2
+
+
+@pytest.mark.asyncio
+async def test_adding_portfolio_with_same_name(test_portfolio, test_portfolio_with_same_name):
+    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
+    await dao.delete_many()
+
+    await dao.add(test_portfolio)
+    await dao.add(test_portfolio_with_same_name)
+
+    portfolios = await dao.list()
+    assert len(portfolios) == 1

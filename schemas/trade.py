@@ -6,18 +6,18 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class TradeActionType(Enum):
+class TradeActionType(str, Enum):
     BUY = 'buy'
     SELL = 'sell'
 
 
-class TradeCurrency(Enum):
+class TradeCurrency(str, Enum):
     RUB = 'rub'
     USD = 'usd'
     CNY = 'cny'
 
 
-class TradeMark(Enum):
+class TradeMark(str, Enum):
     TP = 'tp'
     TN = 'tn'
     FP = 'fp'
@@ -25,11 +25,10 @@ class TradeMark(Enum):
 
 
 class Trade(BaseModel):
-    id: uuid.UUID
     ticker: str
     action: TradeActionType
     value: float
     currency: TradeCurrency
     created_at: datetime
     result: Optional[float] = None
-    mark: TradeMark
+    mark: Optional[TradeMark] = None
