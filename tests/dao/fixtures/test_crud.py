@@ -4,7 +4,8 @@ import pytest
 
 from schemas.portfolio import Portfolio
 from schemas.state import State
-from schemas.trade import Trade, TradeActionType, TradeCurrency
+from schemas.trade import Trade, TradeActionType
+from schemas.currency import Currency
 
 
 @pytest.fixture
@@ -95,7 +96,7 @@ def test_trade():
         ticker='',
         action=TradeActionType.BUY,
         value=100,
-        currency=TradeCurrency.USD,
+        currency=Currency.USD,
         created_at=datetime.now()
     )
 
@@ -106,6 +107,6 @@ def test_trade1():
         ticker='',
         action=TradeActionType.SELL,
         value=200,
-        currency=TradeCurrency.RUB,
+        currency=Currency.RUB,
         created_at=datetime.now()
     )
