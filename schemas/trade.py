@@ -26,3 +26,4 @@ class Trade(BaseModel):
     created_at: datetime
     result: Optional[float] = None
     mark: Optional[TradeMark] = None
+    portfolio_name: str

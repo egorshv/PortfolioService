@@ -7,3 +7,4 @@ class State(BaseModel):
     USD_result: float
     RUB_result: float
     created_at: datetime
+    portfolio_name: str

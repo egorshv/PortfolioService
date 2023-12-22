@@ -6,3 +6,4 @@ from pydantic import BaseModel
 class Operation(BaseModel):
     value: float
     created_at: datetime
+    portfolio_name: str
