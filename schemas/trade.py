@@ -19,6 +19,8 @@ class TradeMark(str, Enum):
 
 
 class Trade(BaseModel):
+    id: int
+    portfolio_id: int
     ticker: str
     action: TradeActionType
     value: float
@@ -26,4 +28,3 @@ class Trade(BaseModel):
     created_at: datetime
     result: Optional[float] = None
     mark: Optional[TradeMark] = None
-    portfolio_name: str
