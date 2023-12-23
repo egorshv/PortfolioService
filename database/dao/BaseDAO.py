@@ -1,47 +1,65 @@
-from typing import List, Optional
+from typing import List, Optional, Type
 
 from pydantic import BaseModel
+from sqlalchemy import select, delete
 
-from database.MongoClientSingleton import MongoClientSingleton
-from settings import MONGO_DB
+from database.DBCore import Base
 
 
 class BaseDAO:
-    def __init__(self, client: MongoClientSingleton, collection_name: str, schema):
-        self.client = client
-        self.db = self.client.get_database(MONGO_DB['NAME'])
-        self.collection = self.db.get_collection(collection_name)
+    def __init__(self, session, model: Type[Base], schema: Type[BaseModel]):
         self.schema = schema
+        self.session = session
+        self.model = model
 
-    async def _add(self, obj: BaseModel) -> None:
-        await self.collection.insert_one(obj.model_dump())
+    async def _create(self, obj: BaseModel) -> BaseModel:
+        async with self.session.begin():
+            model = self.model(obj.model_dump())
+            self.session.add(model)
+            await self.session.commit()
+            return self.schema(**model.__dict__)
 
     async def _get(self, **kwargs) -> Optional[BaseModel]:
-        obj: dict = await self.collection.find_one(kwargs)
-        model = self.schema(**obj)
-        return model
+        async with self.session.begin():
+            result = await self.session.execute(
+                select(self.model).where(**kwargs)
+            )
+            model = result.scalars().first()
+            if model is not None:
+                return self.schema(**model.__dict__)
 
     async def _delete(self, **kwargs) -> None:
-        await self.collection.delete_one(kwargs)
+        async with self.session.begin():
+            try:
+                await self.session.execute(
+                    delete(self.model).where(**kwargs)
+                )
+                await self.session.commit()
+            except Exception as err:
+                await self.session.rollback()
+                raise err
 
-    async def _delete_many(self, **kwargs) -> None:
-        await self.collection.delete_many(kwargs)
-
-    async def _update(self, obj_to_update_params: dict, **kwargs) -> Optional[BaseModel]:
-        obj_to_update_json: dict = await self.collection.find_one(obj_to_update_params)
-        obj_to_update: BaseModel = self.schema(**obj_to_update_json)
-
-        for key, value in kwargs.items():
-            if hasattr(obj_to_update, key):
-                setattr(obj_to_update, key, value)
-
-        await self.collection.update_one(obj_to_update_params, {"$set": obj_to_update.model_dump()})
-        return obj_to_update
+    async def _update(self, obj_id: int, **kwargs) -> Optional[BaseModel]:
+        async with self.session.begin():
+            q = await self.session.execute(
+                select(self.model).where(id=obj_id)
+            )
+            model = q.scalars().first()
+            for key, value in kwargs.items():
+                if hasattr(model, key):
+                    setattr(model, key, value)
+            if model is not None:
+                try:
+                    await self.session.commit()
+                except Exception as err:
+                    await self.session.rollback()
+                    raise err
+                return self.schema(**model.__dict__)
 
     async def _list(self, **kwargs) -> Optional[List[BaseModel]]:
-        obj_list = list()
-        async for obj_json in self.collection.find(dict(kwargs)):
-            obj: BaseModel = self.schema(**obj_json)
-            obj_list.append(obj)
-
-        return obj_list
+        async with self.session():
+            q = select(self.model).filter_by(**kwargs)
+            result = await self.session.execute(q)
+            result = result.scalars().all()
+            return [self.schema(**model.__dict__) for model in result]
+            

@@ -1,10 +1,13 @@
 from fastapi import FastAPI
-from database.MongoClientSingleton import MongoClientSingleton
 from routes.portfolio import portfolio_router
-from settings import MONGO_DB
+from database.DBCore import DBCore
 
 app = FastAPI()
 
 app.include_router(portfolio_router)
 
-client = MongoClientSingleton(MONGO_DB['HOST'], MONGO_DB['PORT'])
+
+@app.on_event('startup')
+async def startup():
+    core = DBCore()
+    await core.init_models()
