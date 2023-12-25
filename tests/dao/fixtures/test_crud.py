@@ -1,16 +1,20 @@
-from datetime import datetime
-
 import pytest
 
-from schemas.portfolio import Portfolio
-from schemas.state import State
-from schemas.trade import Trade, TradeActionType
-from schemas.currency import Currency
+from database.DBCore import DBCore
+from schemas.portfolio import PortfolioSchema
+
+
+@pytest.fixture
+async def test_session():
+    core = DBCore()
+    session = await core.get_session()
+    return session
 
 
 @pytest.fixture
 def test_inserting_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=1,
         name='main_portfolio',
         user_id=1
     )
@@ -18,7 +22,8 @@ def test_inserting_portfolio():
 
 @pytest.fixture
 def test_deleting_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=2,
         name='deleting_portfolio',
         user_id=2
     )
@@ -26,7 +31,8 @@ def test_deleting_portfolio():
 
 @pytest.fixture
 def test_updating_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=3,
         name='old portfolio name',
         user_id=3
     )
@@ -40,9 +46,10 @@ def test_portfolio_names():
 @pytest.fixture
 def test_portfolio_list(test_portfolio_names):
     return [
-        Portfolio(
+        PortfolioSchema(
+            id=_id + 3,
             name=name,
-            user_id=_id
+            user_id=256
         )
         for _id, name in enumerate(test_portfolio_names)
     ]
@@ -50,23 +57,16 @@ def test_portfolio_list(test_portfolio_names):
 
 @pytest.fixture
 def test_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=13,
         name='portfolio 1',
         user_id=4
     )
-
-
-@pytest.fixture
-def test_portfolio_with_same_name():
-    return Portfolio(
-        name='portfolio 1',
-        user_id=4
-    )
-
 
 @pytest.fixture
 def test_portfolio1():
-    return Portfolio(
+    return PortfolioSchema(
+        id=15,
         name='portfolio 2',
         user_id=5
     )

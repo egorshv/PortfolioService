@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class PortfolioSchema(BaseModel):
+    id: int
     name: str
     last_precision: Optional[float] = 0
     last_recall: Optional[float] = 0

@@ -14,25 +14,36 @@ class BaseDAO:
 
     async def _create(self, obj: BaseModel) -> BaseModel:
         async with self.session.begin():
-            model = self.model(obj.model_dump())
+            model = self.model(**obj.model_dump())
             self.session.add(model)
             await self.session.commit()
             return self.schema(**model.__dict__)
 
-    async def _get(self, **kwargs) -> Optional[BaseModel]:
+    async def _get(self, obj_id: int) -> Optional[BaseModel]:
         async with self.session.begin():
             result = await self.session.execute(
-                select(self.model).where(**kwargs)
+                select(self.model).where(self.model.id == obj_id)
             )
             model = result.scalars().first()
             if model is not None:
                 return self.schema(**model.__dict__)
 
-    async def _delete(self, **kwargs) -> None:
+    async def _delete(self, obj_id: int) -> None:
         async with self.session.begin():
             try:
                 await self.session.execute(
-                    delete(self.model).where(**kwargs)
+                    delete(self.model).where(self.model.id == obj_id)
+                )
+                await self.session.commit()
+            except Exception as err:
+                await self.session.rollback()
+                raise err
+
+    async def _delete_all(self) -> None:
+        async with self.session.begin():
+            try:
+                await self.session.execute(
+                    delete(self.model)
                 )
                 await self.session.commit()
             except Exception as err:
@@ -42,7 +53,7 @@ class BaseDAO:
     async def _update(self, obj_id: int, **kwargs) -> Optional[BaseModel]:
         async with self.session.begin():
             q = await self.session.execute(
-                select(self.model).where(id=obj_id)
+                select(self.model).where(self.model.id == obj_id)
             )
             model = q.scalars().first()
             for key, value in kwargs.items():
@@ -57,9 +68,8 @@ class BaseDAO:
                 return self.schema(**model.__dict__)
 
     async def _list(self, **kwargs) -> Optional[List[BaseModel]]:
-        async with self.session():
+        async with self.session.begin():
             q = select(self.model).filter_by(**kwargs)
             result = await self.session.execute(q)
             result = result.scalars().all()
             return [self.schema(**model.__dict__) for model in result]
-            
