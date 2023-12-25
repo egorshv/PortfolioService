@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from routes.portfolio import portfolio_router
+
 from database.DBCore import DBCore
+from routes.portfolio import portfolio_router
 
 app = FastAPI()
 

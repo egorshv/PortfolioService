@@ -7,7 +7,7 @@ if TEST:
         'LOGIN': '',
         'PASSWORD': ''
     }
-    DB_CONNECTION_STRING = ''
+    DB_CONNECTION_STRING = 'sqlite+aiosqlite:///data.db'
 else:
     DB_SETTINGS = {
         'HOST': '127.0.0.1',

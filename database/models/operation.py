@@ -1,22 +1,17 @@
-from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from datetime import datetime
 
-from database.DBCore import Base
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
+
+from database.models.base import Base
 
 
 class Operation(Base):
     __tablename__ = 'operation'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    value = Column(Float, nullable=False)
-    created_at = Column(DateTime, nullable=False)
-    portfolio_id = Column(Integer, ForeignKey('portfolio.id'), nullable=False)
-    portfolio = relationship("Portfolio", backref=backref('operation_portfolio_id'), lazy='selectin',
-                             foreign_keys=portfolio_id)
-
-    def __init__(self, value, created_at, portfolio_id):
-        self.value = value
-        self.created_at = created_at
-        self.portfolio_id = portfolio_id
+    id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
+    value: Mapped[float] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(nullable=False)
+    portfolio_id: Mapped[int] = mapped_column(ForeignKey("portfolio.id", ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return f'{self.value} : {self.created_at} : {self.portfolio_id}'

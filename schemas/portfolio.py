@@ -3,8 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class Portfolio(BaseModel):
-    id: int
+class PortfolioSchema(BaseModel):
     name: str
     last_precision: Optional[float] = 0
     last_recall: Optional[float] = 0

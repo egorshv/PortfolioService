@@ -1,9 +1,7 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
+from database.models.base import Base
 from settings import DB_CONNECTION_STRING
-
-Base = declarative_base()
 
 
 class DBCore:
@@ -17,12 +15,11 @@ class DBCore:
     def __init__(self):
         self.engine = create_async_engine(
             DB_CONNECTION_STRING,
-            echo=True,
-            future=True,
+            echo=True
         )
 
     async def get_session(self):
-        async_session = async_sessionmaker(self.engine, expire_on_commit=False, class_=AsyncSession)
+        async_session = async_sessionmaker(self.engine, expire_on_commit=False)
 
         async with async_session() as session:
             try:
@@ -33,3 +30,6 @@ class DBCore:
     async def init_models(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+
+    async def close_connection(self):
+        await self.engine.dispose()
