@@ -1,18 +1,11 @@
+import os
+
 TEST = True
 
 if TEST:
-    DB_SETTINGS = {
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
-        'LOGIN': '',
-        'PASSWORD': ''
-    }
-    DB_CONNECTION_STRING = 'sqlite+aiosqlite:////home/admin/PycharmProjects/invest_stats/test_database.db'
+    FILE_PATH = os.path.abspath(__file__)
+    BASE_DIR = os.path.dirname(FILE_PATH)
+    DATABASE_FILENAME = 'test_database.db'
+    DB_CONNECTION_STRING = f'sqlite+aiosqlite:///{os.path.join(BASE_DIR, DATABASE_FILENAME)}'
 else:
-    DB_SETTINGS = {
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
-        'LOGIN': '',
-        'PASSWORD': ''
-    }
     DB_CONNECTION_STRING = ''
