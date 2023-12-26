@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from database.models.base import Base
 from schemas.currency import Currency
-from schemas.trade import TradeActionType
+from schemas.trade import TradeActionType, TradeMark
 
 
 class Trade(Base):
@@ -14,10 +14,11 @@ class Trade(Base):
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
     ticker: Mapped[str] = mapped_column(nullable=False)
     action: Mapped[TradeActionType] = mapped_column(nullable=False)
+    mark: Mapped[TradeMark] = mapped_column(nullable=True, default=None)
     value: Mapped[float] = mapped_column(nullable=False)
     currency: Mapped[Currency] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(nullable=False)
-    result: Mapped[float] = mapped_column(nullable=False)
+    result: Mapped[float] = mapped_column(nullable=True, default=None)
     portfolio_id: Mapped[int] = mapped_column(ForeignKey("portfolio.id", ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):

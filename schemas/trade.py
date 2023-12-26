@@ -18,7 +18,7 @@ class TradeMark(str, Enum):
     FN = 'fn'
 
 
-class Trade(BaseModel):
+class TradeSchema(BaseModel):
     id: int
     portfolio_id: int
     ticker: str

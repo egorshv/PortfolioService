@@ -1,6 +1,6 @@
 import pytest
 
-from schemas.portfolio import Portfolio
+from schemas.portfolio import PortfolioSchema
 
 
 @pytest.mark.asyncio
@@ -9,7 +9,7 @@ async def test_get_portfolio_route(test_client, test_portfolio_data):
     response = test_client.get(f'/portfolio/{user_id}/{portfolio_name}')
     assert response.status_code == 200
 
-    portfolio = Portfolio(**response.json())
+    portfolio = PortfolioSchema(**response.json())
     assert portfolio.name == portfolio_name
 
 
@@ -40,7 +40,7 @@ async def test_update_portfolio_route(
     add_response = test_client.post('/portfolio', json=portfolio.model_dump())
     assert add_response.status_code == 200
 
-    new_portfolio = Portfolio(
+    new_portfolio = PortfolioSchema(
         name=new_portfolio_name,
         user_id=portfolio.user_id
     )
@@ -50,7 +50,7 @@ async def test_update_portfolio_route(
     get_response = test_client.get(f'portfolio/{new_portfolio.user_id}/{new_portfolio.name}')
     assert get_response.status_code == 200
 
-    updated_portfolio = Portfolio(**get_response.json())
+    updated_portfolio = PortfolioSchema(**get_response.json())
     assert updated_portfolio.name == new_portfolio_name
 
 

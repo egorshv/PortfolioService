@@ -7,7 +7,7 @@ if TEST:
         'LOGIN': '',
         'PASSWORD': ''
     }
-    DB_CONNECTION_STRING = 'sqlite+aiosqlite:////home/admin/PycharmProjects/invest_stats/data.db'
+    DB_CONNECTION_STRING = 'sqlite+aiosqlite:////home/admin/PycharmProjects/invest_stats/test_database.db'
 else:
     DB_SETTINGS = {
         'HOST': '127.0.0.1',

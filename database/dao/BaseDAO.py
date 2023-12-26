@@ -2,12 +2,13 @@ from typing import List, Optional, Type
 
 from pydantic import BaseModel
 from sqlalchemy import select, delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.DBCore import Base
 
 
 class BaseDAO:
-    def __init__(self, session, model: Type[Base], schema: Type[BaseModel]):
+    def __init__(self, session: AsyncSession, model: Type[Base], schema: Type[BaseModel]):
         self.schema = schema
         self.session = session
         self.model = model

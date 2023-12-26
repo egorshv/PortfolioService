@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import app
-from schemas.portfolio import Portfolio
+from schemas.portfolio import PortfolioSchema
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def test_portfolio_data():
 
 @pytest.fixture
 def test_posting_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
         name='posting portfolio',
         user_id=254
     )
@@ -25,7 +25,7 @@ def test_posting_portfolio():
 
 @pytest.fixture
 def test_updating_portfolio_data():
-    return Portfolio(
+    return PortfolioSchema(
         name='updating portfolio',
         user_id=932
     ), 'updated portfolio name'
@@ -33,7 +33,7 @@ def test_updating_portfolio_data():
 
 @pytest.fixture
 def test_deleting_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
         name='deleting portfolio',
         user_id=1024
     )

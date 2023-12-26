@@ -3,9 +3,9 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class State(BaseModel):
+class StateSchema(BaseModel):
     id: int
     portfolio_id: int
-    USD_result: float
-    RUB_result: float
+    usd_result: float
+    rub_result: float
     created_at: datetime

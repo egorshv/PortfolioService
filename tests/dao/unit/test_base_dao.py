@@ -4,10 +4,12 @@ from database.DBCore import DBCore
 from database.dao.BaseDAO import BaseDAO
 from database.models.portfolio import Portfolio
 from schemas.portfolio import PortfolioSchema
+from settings import TEST
 
 
 @pytest.mark.asyncio
 async def test_portfolio_inserting(test_inserting_portfolio):
+    assert TEST
     session = await DBCore().get_session()
     dao = BaseDAO(session, Portfolio, PortfolioSchema)
     await dao._delete_all()
@@ -20,6 +22,7 @@ async def test_portfolio_inserting(test_inserting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_deleting(test_deleting_portfolio):
+    assert TEST
     session = await DBCore().get_session()
     dao = BaseDAO(session, Portfolio, PortfolioSchema)
     await dao._delete_all()
@@ -33,6 +36,7 @@ async def test_portfolio_deleting(test_deleting_portfolio):
 
 @pytest.mark.asyncio
 async def test_portfolio_updating(test_updating_portfolio):
+    assert TEST
     session = await DBCore().get_session()
     dao = BaseDAO(session, Portfolio, PortfolioSchema)
     await dao._delete_all()
@@ -42,8 +46,10 @@ async def test_portfolio_updating(test_updating_portfolio):
 
     assert updated_portfolio.name == 'new portfolio name'
 
+
 @pytest.mark.asyncio
 async def test_portfolio_list(test_portfolio_list):
+    assert TEST
     session = await DBCore().get_session()
     dao = BaseDAO(session, Portfolio, PortfolioSchema)
     await dao._delete_all()
@@ -58,4 +64,5 @@ async def test_portfolio_list(test_portfolio_list):
 @pytest.mark.skip(reason='not implemented')
 @pytest.mark.asyncio
 async def test_cascade_deleting():
+    assert TEST
     session = await DBCore().get_session()
