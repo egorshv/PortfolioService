@@ -1,14 +1,12 @@
+from datetime import datetime
+
 import pytest
 
-from database.DBCore import DBCore
+from schemas.currency import Currency
+from schemas.operation import OperationSchema
 from schemas.portfolio import PortfolioSchema
-
-
-@pytest.fixture
-async def test_session():
-    core = DBCore()
-    session = await core.get_session()
-    return session
+from schemas.state import StateSchema
+from schemas.trade import TradeSchema, TradeActionType
 
 
 @pytest.fixture
@@ -63,6 +61,7 @@ def test_portfolio():
         user_id=4
     )
 
+
 @pytest.fixture
 def test_portfolio1():
     return PortfolioSchema(
@@ -70,3 +69,46 @@ def test_portfolio1():
         name='portfolio 2',
         user_id=5
     )
+
+
+@pytest.fixture
+def test_states():
+    return [
+        StateSchema(
+            id=i + 1,
+            portfolio_id=1,
+            usd_result=0,
+            rub_result=0,
+            created_at=datetime.now()
+        )
+        for i in range(10)
+    ]
+
+
+@pytest.fixture
+def test_operations():
+    return [
+        OperationSchema(
+            id=i + 1,
+            portfolio_id=1,
+            value=0,
+            created_at=datetime.now()
+        )
+        for i in range(10)
+    ]
+
+
+@pytest.fixture
+def test_trades():
+    return [
+        TradeSchema(
+            id=i + 1,
+            portfolio_id=1,
+            ticker='SBER',
+            action=TradeActionType.BUY,
+            value=0,
+            currency=Currency.RUB,
+            created_at=datetime.now()
+        )
+        for i in range(10)
+    ]

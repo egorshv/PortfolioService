@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.models.base import Base
 
@@ -13,7 +13,12 @@ class State(Base):
     usd_result: Mapped[float] = mapped_column(nullable=False)
     rub_result: Mapped[float] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(nullable=False)
-    portfolio_id: Mapped[int] = mapped_column(ForeignKey("portfolio.id", ondelete='CASCADE'), nullable=False)
+    portfolio_id: Mapped[int] = mapped_column(ForeignKey("portfolio.id", ondelete='CASCADE'), nullable=False,
+                                              index=True)
+    portfolio = relationship(
+        "Portfolio",
+        back_populates="states"
+    )
 
     def __repr__(self):
         return f'{self.created_at} : {self.portfolio_id}'

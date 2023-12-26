@@ -17,9 +17,18 @@ class Portfolio(Base):
     last_recall: Mapped[float] = mapped_column(default=0)
     user_id: Mapped[int] = mapped_column(nullable=False)
     deposited_money: Mapped[float] = mapped_column(default=0)
-    trades: Mapped[List[Trade]] = relationship()
-    states: Mapped[List[State]] = relationship()
-    operations: Mapped[List[Operation]] = relationship()
+    trades: Mapped[List[Trade]] = relationship('Trade',
+                                               back_populates='portfolio',
+                                               cascade='save-update, merge, delete',
+                                               passive_deletes=True)
+    states: Mapped[List[State]] = relationship('State',
+                                               back_populates='portfolio',
+                                               cascade='save-update, merge, delete',
+                                               passive_deletes=True)
+    operations: Mapped[List[Operation]] = relationship('Operation',
+                                                       back_populates='portfolio',
+                                                       cascade='save-update, merge, delete',
+                                                       passive_deletes=True)
 
     def __repr__(self):
         return f'ID: {self.user_id} Name: {self.name}'
