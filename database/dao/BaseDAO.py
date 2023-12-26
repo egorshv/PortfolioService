@@ -52,6 +52,7 @@ class BaseDAO:
                 raise err
 
     async def _update(self, obj_id: int, **kwargs) -> Optional[BaseModel]:
+        kwargs = {key: value for key, value in kwargs.items() if value is not None}
         async with self.session.begin():
             q = await self.session.execute(
                 select(self.model).where(self.model.id == obj_id)
@@ -69,6 +70,7 @@ class BaseDAO:
                 return self.schema(**model.__dict__)
 
     async def _list(self, **kwargs) -> Optional[List[BaseModel]]:
+        kwargs = {key: value for key, value in kwargs.items() if value is not None}
         async with self.session.begin():
             q = select(self.model).filter_by(**kwargs)
             result = await self.session.execute(q)

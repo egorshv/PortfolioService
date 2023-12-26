@@ -1,44 +1,47 @@
-from typing import List
+from typing import List, Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.dao.PortfolioDAO import PortfolioDAO
 from schemas.portfolio import PortfolioSchema
-from settings import MONGO_DB
+from routes.utils import get_async_session
 
 portfolio_router = APIRouter()
 
 
 @portfolio_router.get('/portfolios', response_model=List[PortfolioSchema])
-async def get_portfolios(name: str = None, user_id: int = None) -> List[PortfolioSchema]:
-    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
-    portfolios = await dao.list(name=name, user_id=user_id)
+async def get_portfolios(user_id: int = None, session: AsyncSession = Depends(get_async_session)) -> \
+        List[PortfolioSchema]:
+    dao = PortfolioDAO(session)
+    portfolios = await dao.list(user_id=user_id)
     return portfolios
 
 
-@portfolio_router.get('/portfolio/{user_id}/{portfolio_name}', response_model=PortfolioSchema)
-async def get_portfolio(user_id: int, portfolio_name: str):
-    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
-    portfolio = await dao.get(portfolio_name, user_id)
+@portfolio_router.get('/portfolio/{portfolio_id}', response_model=Optional[PortfolioSchema])
+async def get_portfolio(portfolio_id, session: AsyncSession = Depends(get_async_session)) -> Optional[PortfolioSchema]:
+    dao = PortfolioDAO(session)
+    portfolio = await dao.get(portfolio_id)
     return portfolio
 
 
-@portfolio_router.post('/portfolio', response_model=PortfolioSchema)
-async def post_portfolio(portfolio: PortfolioSchema):
-    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
+@portfolio_router.post('/portfolio', response_model=Optional[PortfolioSchema])
+async def post_portfolio(portfolio: PortfolioSchema,
+                         session: AsyncSession = Depends(get_async_session)) -> Optional[PortfolioSchema]:
+    dao = PortfolioDAO(session)
     await dao.add(portfolio)
     return portfolio
 
 
-@portfolio_router.delete('/portfolio/{user_id}/{portfolio_name}')
-async def delete_portfolio(user_id: int, portfolio_name: str):
-    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
-    await dao.delete(portfolio_name, user_id)
+@portfolio_router.delete('/portfolio/{portfolio_id}')
+async def delete_portfolio(portfolio_id: int, session: AsyncSession = Depends(get_async_session)):
+    dao = PortfolioDAO(session)
+    await dao.delete(portfolio_id)
     return {'result': 'portfolio deleted'}
 
 
-@portfolio_router.put('/portfolio/{user_id}/{portfolio_name}')
-async def update_portfolio(user_id: int, portfolio_name: str, new_portfolio: PortfolioSchema):
-    dao = PortfolioDAO(MONGO_DB['COLLECTION'])
-    await dao.update(portfolio_name, user_id, **new_portfolio.model_dump())
-    return {'result': 'portfolio updated'}
+@portfolio_router.put('/portfolio/{portfolio_id}', response_model=Optional[PortfolioSchema])
+async def update_portfolio(portfolio_id: int, new_portfolio: PortfolioSchema,
+                           session: AsyncSession = Depends(get_async_session)) -> Optional[PortfolioSchema]:
+    dao = PortfolioDAO(session)
+    return await dao.update(portfolio_id, **new_portfolio.model_dump())
