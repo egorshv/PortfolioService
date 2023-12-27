@@ -1,6 +1,7 @@
 import asyncio
 from typing import List, Optional
 
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.dao.BaseDAO import BaseDAO
@@ -12,10 +13,10 @@ class PortfolioDAO(BaseDAO):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Portfolio, PortfolioSchema)
 
-    async def add(self, portfolio: PortfolioSchema) -> None:
+    async def add(self, portfolio: PortfolioSchema) -> Optional[PortfolioSchema]:
         lock = asyncio.Lock()
         async with lock:
-            await self._create(portfolio)
+            return await self._create(portfolio)
 
     async def delete(self, portfolio_id: int) -> None:
         lock = asyncio.Lock()

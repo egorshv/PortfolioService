@@ -12,10 +12,10 @@ class StateDAO(BaseDAO):
     def __init__(self, session: AsyncSession):
         super().__init__(session, State, StateSchema)
 
-    async def add(self, state: StateSchema) -> None:
+    async def add(self, state: StateSchema) -> Optional[StateSchema]:
         lock = asyncio.Lock()
         async with lock:
-            await self._create(state)
+            return await self._create(state)
 
     async def delete(self, state_id: int) -> None:
         lock = asyncio.Lock()

@@ -12,10 +12,10 @@ class TradeDAO(BaseDAO):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Trade, TradeSchema)
 
-    async def add(self, trade: TradeSchema) -> None:
+    async def add(self, trade: TradeSchema) -> Optional[TradeSchema]:
         lock = asyncio.Lock()
         async with lock:
-            await self._create(trade)
+            return await self._create(trade)
 
     async def delete(self, trade_id: int) -> None:
         lock = asyncio.Lock()

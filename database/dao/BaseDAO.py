@@ -13,7 +13,7 @@ class BaseDAO:
         self.session = session
         self.model = model
 
-    async def _create(self, obj: BaseModel) -> BaseModel:
+    async def _create(self, obj: BaseModel) -> Optional[BaseModel]:
         async with self.session.begin():
             model = self.model(**obj.model_dump())
             self.session.add(model)

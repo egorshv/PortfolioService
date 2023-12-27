@@ -12,10 +12,10 @@ class OperationDAO(BaseDAO):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Operation, OperationSchema)
 
-    async def add(self, operation: OperationSchema) -> None:
+    async def add(self, operation: OperationSchema) -> Optional[OperationSchema]:
         lock = asyncio.Lock()
         async with lock:
-            await self._create(operation)
+            return await self._create(operation)
 
     async def delete(self, operation_id: int) -> None:
         lock = asyncio.Lock()
