@@ -1,1 +1,1 @@
-from tests.dao.fixtures.test_crud import *
+from tests.dao.fixtures import *

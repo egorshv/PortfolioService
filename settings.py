@@ -1,18 +1,11 @@
+import os
+
 TEST = True
 
 if TEST:
-    MONGO_DB = {
-        'NAME': 'invest_stats',
-        'COLLECTION': 'test_portfolio',
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
-        'PASSWORD': ''
-    }
+    FILE_PATH = os.path.abspath(__file__)
+    BASE_DIR = os.path.dirname(FILE_PATH)
+    DATABASE_FILENAME = 'test_database.db'
+    DB_CONNECTION_STRING = f'sqlite+aiosqlite:///{os.path.join(BASE_DIR, DATABASE_FILENAME)}'
 else:
-    MONGO_DB = {
-        'NAME': 'invest_stats',
-        'COLLECTION': 'portfolio',
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
-        'PASSWORD': ''
-    }
+    DB_CONNECTION_STRING = ''

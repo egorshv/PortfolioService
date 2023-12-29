@@ -2,14 +2,17 @@ from datetime import datetime
 
 import pytest
 
-from schemas.portfolio import Portfolio
-from schemas.state import State
-from schemas.trade import Trade, TradeActionType, TradeCurrency
+from schemas.currency import Currency
+from schemas.operation import OperationSchema
+from schemas.portfolio import PortfolioSchema
+from schemas.state import StateSchema
+from schemas.trade import TradeSchema, TradeActionType
 
 
 @pytest.fixture
 def test_inserting_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=1,
         name='main_portfolio',
         user_id=1
     )
@@ -17,7 +20,8 @@ def test_inserting_portfolio():
 
 @pytest.fixture
 def test_deleting_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=2,
         name='deleting_portfolio',
         user_id=2
     )
@@ -25,7 +29,8 @@ def test_deleting_portfolio():
 
 @pytest.fixture
 def test_updating_portfolio():
-    return Portfolio(
+    return PortfolioSchema(
+        id=3,
         name='old portfolio name',
         user_id=3
     )
@@ -39,9 +44,10 @@ def test_portfolio_names():
 @pytest.fixture
 def test_portfolio_list(test_portfolio_names):
     return [
-        Portfolio(
+        PortfolioSchema(
+            id=_id + 3,
             name=name,
-            user_id=_id
+            user_id=256
         )
         for _id, name in enumerate(test_portfolio_names)
     ]
@@ -49,15 +55,8 @@ def test_portfolio_list(test_portfolio_names):
 
 @pytest.fixture
 def test_portfolio():
-    return Portfolio(
-        name='portfolio 1',
-        user_id=4
-    )
-
-
-@pytest.fixture
-def test_portfolio_with_same_name():
-    return Portfolio(
+    return PortfolioSchema(
+        id=13,
         name='portfolio 1',
         user_id=4
     )
@@ -65,47 +64,51 @@ def test_portfolio_with_same_name():
 
 @pytest.fixture
 def test_portfolio1():
-    return Portfolio(
+    return PortfolioSchema(
+        id=15,
         name='portfolio 2',
         user_id=5
     )
 
 
 @pytest.fixture
-def test_state():
-    return State(
-        USD_result=100.0,
-        RUB_result=100.0,
-        created_at=datetime.now()
-    )
+def test_states():
+    return [
+        StateSchema(
+            id=i + 1,
+            portfolio_id=1,
+            usd_result=0,
+            rub_result=0,
+            created_at=datetime.now()
+        )
+        for i in range(10)
+    ]
 
 
 @pytest.fixture
-def test_state1():
-    return State(
-        USD_result=110.0,
-        RUB_result=110.0,
-        created_at=datetime.now()
-    )
+def test_operations():
+    return [
+        OperationSchema(
+            id=i + 1,
+            portfolio_id=1,
+            value=0,
+            created_at=datetime.now()
+        )
+        for i in range(10)
+    ]
 
 
 @pytest.fixture
-def test_trade():
-    return Trade(
-        ticker='',
-        action=TradeActionType.BUY,
-        value=100,
-        currency=TradeCurrency.USD,
-        created_at=datetime.now()
-    )
-
-
-@pytest.fixture
-def test_trade1():
-    return Trade(
-        ticker='',
-        action=TradeActionType.SELL,
-        value=200,
-        currency=TradeCurrency.RUB,
-        created_at=datetime.now()
-    )
+def test_trades():
+    return [
+        TradeSchema(
+            id=i + 1,
+            portfolio_id=1,
+            ticker='SBER',
+            action=TradeActionType.BUY,
+            value=0,
+            currency=Currency.RUB,
+            created_at=datetime.now()
+        )
+        for i in range(10)
+    ]

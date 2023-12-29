@@ -1,7 +1,7 @@
-import uuid
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from schemas.currency import Currency
 
 from pydantic import BaseModel
 
@@ -11,12 +11,6 @@ class TradeActionType(str, Enum):
     SELL = 'sell'
 
 
-class TradeCurrency(str, Enum):
-    RUB = 'rub'
-    USD = 'usd'
-    CNY = 'cny'
-
-
 class TradeMark(str, Enum):
     TP = 'tp'
     TN = 'tn'
@@ -24,11 +18,13 @@ class TradeMark(str, Enum):
     FN = 'fn'
 
 
-class Trade(BaseModel):
+class TradeSchema(BaseModel):
+    id: int
+    portfolio_id: int
     ticker: str
     action: TradeActionType
     value: float
-    currency: TradeCurrency
+    currency: Currency
     created_at: datetime
     result: Optional[float] = None
     mark: Optional[TradeMark] = None

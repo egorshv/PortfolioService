@@ -1,15 +1,12 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
-from schemas.state import State
-from schemas.trade import Trade
 
-
-class Portfolio(BaseModel):
+class PortfolioSchema(BaseModel):
+    id: int
     name: str
-    precision: Optional[float] = None
-    recall: Optional[float] = None
+    last_precision: Optional[float] = 0
+    last_recall: Optional[float] = 0
     user_id: int
-    trades: List[Trade] = []
-    states: List[State] = []
+    deposited_money: int = 0
