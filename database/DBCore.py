@@ -15,7 +15,7 @@ class DBCore:
     def __init__(self):
         self.engine = create_async_engine(
             DB_CONNECTION_STRING,
-            echo=True
+            echo=False
         )
 
     async def get_session(self):

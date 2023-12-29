@@ -3,8 +3,6 @@ from datetime import datetime
 from typing import List, Tuple, Optional
 
 from schemas.currency import Currency
-from schemas.period import Period
-from schemas.portfolio import PortfolioSchema
 from schemas.state import StateSchema
 from schemas.trade import TradeMark, TradeSchema
 
