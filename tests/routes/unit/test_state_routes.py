@@ -1,6 +1,7 @@
 import pytest
 from fastapi.encoders import jsonable_encoder
 
+from schemas.state import StateSchema
 from settings import TEST
 from tests.routes.utils import clear_state_db
 
@@ -11,8 +12,12 @@ async def test_state_posting(test_client, test_posting_state):
     await clear_state_db()
 
     response = test_client.post('/state', json=jsonable_encoder(test_posting_state))
+    getting_state = StateSchema(**response.json())
     assert response.status_code == 200
-    assert response.json() == jsonable_encoder(test_posting_state)
+
+    assert getting_state.portfolio_id == test_posting_state.portfolio_id
+    assert getting_state.rub_result == test_posting_state.rub_result
+    assert getting_state.usd_result == test_posting_state.usd_result
 
 
 @pytest.mark.asyncio

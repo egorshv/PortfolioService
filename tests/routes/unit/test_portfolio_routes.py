@@ -53,9 +53,11 @@ async def test_post_portfolio_route(test_client, test_posting_portfolio):
     assert TEST
     await clear_portfolio_db()
     response = test_client.post('/portfolio', json=test_posting_portfolio.model_dump())
+    getting_portfolio = PortfolioSchema(**response.json())
     assert response.status_code == 200
 
-    assert response.json() == test_posting_portfolio.model_dump()
+    assert getting_portfolio.user_id == test_posting_portfolio.user_id
+    assert getting_portfolio.name == test_posting_portfolio.name
 
 
 @pytest.mark.asyncio

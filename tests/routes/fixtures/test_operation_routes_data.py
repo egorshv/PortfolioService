@@ -9,7 +9,6 @@ from schemas.operation import OperationSchema
 @pytest.fixture
 def test_posting_operation() -> OperationSchema:
     return OperationSchema(
-        id=1,
         portfolio_id=1,
         value=100,
         created_at=datetime.now()

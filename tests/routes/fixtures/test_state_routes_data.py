@@ -9,7 +9,6 @@ from schemas.state import StateSchema
 @pytest.fixture
 def test_posting_state() -> StateSchema:
     return StateSchema(
-        id=1,
         portfolio_id=1,
         usd_result=0,
         rub_result=0,

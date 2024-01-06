@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-TEST = False
+TEST = True
 
 if TEST:
     FILE_PATH = os.path.abspath(__file__)

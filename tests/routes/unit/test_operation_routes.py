@@ -1,6 +1,7 @@
 import pytest
 from fastapi.encoders import jsonable_encoder
 
+from schemas.operation import OperationSchema
 from settings import TEST
 from tests.routes.utils import clear_operation_db
 
@@ -11,8 +12,11 @@ async def test_operation_posting(test_client, test_posting_operation):
     await clear_operation_db()
 
     response = test_client.post('/operation', json=jsonable_encoder(test_posting_operation))
+    getting_operation = OperationSchema(**response.json())
     assert response.status_code == 200
-    assert response.json() == jsonable_encoder(test_posting_operation)
+
+    assert getting_operation.portfolio_id == test_posting_operation.portfolio_id
+    assert getting_operation.value == test_posting_operation.value
 
 
 @pytest.mark.asyncio

@@ -28,7 +28,6 @@ def test_getting_portfolio():
 @pytest.fixture
 def test_posting_portfolio():
     return PortfolioSchema(
-        id=1,
         name='posting portfolio',
         user_id=254
     )
