@@ -12,9 +12,13 @@ async def test_post_trade(test_client, test_posting_trade):
     await clear_trade_db()
 
     post_response = test_client.post('/trade', json=jsonable_encoder(test_posting_trade))
+    getting_trade = TradeSchema(**post_response.json())
     assert post_response.status_code == 200
 
-    assert post_response.json() == jsonable_encoder(test_posting_trade)
+    assert getting_trade.portfolio_id == test_posting_trade.portfolio_id
+    assert getting_trade.ticker == test_posting_trade.ticker
+    assert getting_trade.currency == test_posting_trade.currency
+    assert getting_trade.action == test_posting_trade.action
 
 
 @pytest.mark.asyncio

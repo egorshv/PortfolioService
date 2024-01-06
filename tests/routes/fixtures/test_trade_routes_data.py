@@ -49,7 +49,6 @@ def test_updated_trade() -> TradeSchema:
 @pytest.fixture
 def test_posting_trade() -> TradeSchema:
     return TradeSchema(
-        id=3,
         portfolio_id=1,
         ticker='YNDX',
         action=TradeActionType.BUY,
