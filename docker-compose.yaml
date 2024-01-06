@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: portfolio-service-api
+    build:
+      context: .
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: ["/src/docker/app.sh"]
+    ports:
+      - ${API_PORT}:8000
+    restart: always
+
+
+  db:
+    container_name: portfolio-service-postgres
+    image: postgres
+    env_file:
+      - .env
+    command: -p 1221
+    expose:
+      - 1221
+    volumes:
+      - .postgres:/var/lib/postgres/data
+    restart: always

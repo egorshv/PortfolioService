@@ -19,7 +19,11 @@ class DBCore:
         )
 
     async def get_session(self):
-        async_session = async_sessionmaker(self.engine, expire_on_commit=False)
+        async_session = async_sessionmaker(bind=self.engine,
+                                           expire_on_commit=False,
+                                           autoflush=False,
+                                           autocommit=False
+                                           )
 
         async with async_session() as session:
             try:

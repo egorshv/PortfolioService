@@ -4,7 +4,7 @@ from typing import List
 import pytest
 from fastapi.testclient import TestClient
 
-from app import app
+from app.main import app
 from schemas.currency import Currency
 from schemas.portfolio import PortfolioSchema
 from schemas.state import StateSchema

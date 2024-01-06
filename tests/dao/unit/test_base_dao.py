@@ -65,9 +65,9 @@ async def test_portfolio_list(test_portfolio_list):
     assert len(portfolio_list) == len(test_portfolio_list)
 
 
+@pytest.mark.skip(reason='works only with prod database')
 @pytest.mark.asyncio
 async def test_cascade_deleting(test_inserting_portfolio, test_trades, test_operations, test_states):
-    assert TEST
     session = await DBCore().get_session()
     portfolio_dao = PortfolioDAO(session)
     trade_dao = TradeDAO(session)
@@ -84,12 +84,20 @@ async def test_cascade_deleting(test_inserting_portfolio, test_trades, test_oper
     [await operation_dao.add(operation) for operation in test_operations]
     [await trade_dao.add(trade) for trade in test_trades]
 
+    getting_states = await state_dao.list()
+    assert len(getting_states) == len(test_states)
+
+    getting_operations = await state_dao.list()
+    assert len(getting_operations) == len(test_operations)
+
+    getting_trades = await trade_dao.list()
+    assert len(getting_trades) == len(test_trades)
+
     await portfolio_dao.delete(test_inserting_portfolio.id)
     states = await state_dao.list(portfolio_id=test_inserting_portfolio.id)
     trades = await trade_dao.list(portfolio_id=test_inserting_portfolio.id)
     operations = await operation_dao.list(portfolio_id=test_inserting_portfolio.id)
 
-
-    assert states is None
-    assert trades is None
-    assert operations is None
+    assert states == []
+    assert trades == []
+    assert operations == []
