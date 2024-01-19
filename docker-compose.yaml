@@ -12,7 +12,7 @@ services:
     command: ["/src/docker/app.sh"]
     ports:
       - ${API_PORT}:8000
-    restart: always
+    restart: unless-stopped
 
 
   db:
@@ -25,4 +25,4 @@ services:
       - 1221
     volumes:
       - .postgres:/var/lib/postgres/data
-    restart: always
+    restart: unless-stopped

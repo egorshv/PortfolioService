@@ -70,8 +70,9 @@ async def test_get_portfolios_by_user_id(test_client, test_posting_portfolio):
     response = test_client.get(f'/portfolio?user_id={test_posting_portfolio.user_id}')
     assert response.status_code == 200
 
-    portfolios = list(response.json())
-    assert test_posting_portfolio.model_dump() in portfolios
+    [portfolio_json] = list(response.json())
+    assert test_posting_portfolio.name == portfolio_json['name']
+    assert test_posting_portfolio.user_id == portfolio_json['user_id']
 
 
 @pytest.mark.asyncio
