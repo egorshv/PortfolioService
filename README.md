@@ -1,5 +1,5 @@
 # Portfolio Service
-## Microservice of portfolio
+## Microservice of Investing System
 ## Installation
 ```commandline
 git clone --recursive https://github.com/egorshv/PortfolioService.git
