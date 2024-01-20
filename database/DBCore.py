@@ -1,3 +1,4 @@
+from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from database.models.base import Base
@@ -15,7 +16,8 @@ class DBCore:
     def __init__(self):
         self.engine = create_async_engine(
             DB_CONNECTION_STRING,
-            echo=False
+            echo=False,
+            poolclass=NullPool
         )
 
     async def get_session(self):

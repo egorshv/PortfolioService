@@ -25,7 +25,7 @@ async def get_portfolios(user_id: int = None, session: AsyncSession = Depends(ge
 
 
 @portfolio_router.get('/portfolio/{portfolio_id}', response_model=Optional[PortfolioSchema])
-async def get_portfolio(portfolio_id, session: AsyncSession = Depends(get_async_session)) -> Optional[PortfolioSchema]:
+async def get_portfolio(portfolio_id: int, session: AsyncSession = Depends(get_async_session)) -> Optional[PortfolioSchema]:
     dao = PortfolioDAO(session)
     portfolio = await dao.get(portfolio_id)
     return portfolio
