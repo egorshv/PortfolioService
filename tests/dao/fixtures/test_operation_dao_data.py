@@ -19,8 +19,18 @@ def test_inserting_operation() -> OperationSchema:
 def test_updating_operation() -> OperationSchema:
     return OperationSchema(
         id=2,
-        portfolio_id=1,
-        value=0,
+        portfolio_id=3,
+        value=100,
+        created_at=datetime.now()
+    )
+
+
+@pytest.fixture
+def test_updating_operation2() -> OperationSchema:
+    return OperationSchema(
+        id=56,
+        portfolio_id=3,
+        value=-20,
         created_at=datetime.now()
     )
 
@@ -29,7 +39,7 @@ def test_updating_operation() -> OperationSchema:
 def test_deleting_operation() -> OperationSchema:
     return OperationSchema(
         id=3,
-        portfolio_id=3,
+        portfolio_id=2,
         value=1,
         created_at=datetime.now()
     )
